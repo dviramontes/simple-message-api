@@ -1,8 +1,11 @@
 import express from "express";
-
+import bodyParser = require("body-parser");
+import { healthCheck } from "./routes";
 const PORT = process.env.PORT || 4000;
 const app = express();
 
-app.get("/ping", (req, res) => res.send("pong"));
+// middleware
+app.use(bodyParser.json());
+app.use("/ping", healthCheck);
 
 app.listen(PORT, () => console.log(`server running on ${PORT}`));

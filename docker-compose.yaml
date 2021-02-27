@@ -27,4 +27,4 @@ volumes:
   pg-data:
 
 networks:
-    messages-network:
+  messages-network:
