@@ -30,6 +30,10 @@
 
 Other dev tasks
 
+#### Testing
+
+- `npm test`
+
 #### Linting
 
 - `npm run format` uses prettier
