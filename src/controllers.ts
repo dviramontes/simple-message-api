@@ -2,17 +2,19 @@ import { pool } from "./db";
 import { ok, err } from "neverthrow";
 import sql from "sql-template-strings";
 
-// TODO: update controller
 export async function allMessagesController() {
   let result = null;
   const client = await pool.connect();
   try {
     const queryResults = await client.query(
       sql`
-          SELECT *
+          SELECT messages.*,
+           (SELECT user_id FROM user_convos 
+            WHERE convo_id = messages.convo_id AND user_id <> messages.send_by_id) AS sent_to_id
           FROM messages
           WHERE messages.created_at > (now() - '30 days'::INTERVAL)
-          LIMIT 100`
+          LIMIT 100;
+      `
     );
     result = queryResults.rows;
   } catch (error) {
