@@ -1,23 +1,23 @@
 version: "3.8"
 services:
   postgres:
-    container_name: "messages-postgres"
+    container_name: "messages-postgres-test"
     networks:
-      - messages-network
+      - messages-network-test
     image: postgres:12
     restart: always
     environment:
-      POSTGRES_DB: messages
+      POSTGRES_DB: messages-test
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - 5432:5432
     command: postgres -c 'max_connections=500'
     volumes:
-      - ./pg-data:/var/lib/postgresql/data
+      - ./pg-data-test:/var/lib/postgresql/data
 
 volumes:
-  pg-data:
+  pg-data-test:
 
 networks:
-  messages-network:
+  messages-network-test:

@@ -3,9 +3,12 @@ import sql from "sql-template-strings";
 
 const connectionString =
   "postgresql://postgres:postgres@localhost:5432/messages";
+const tesConnectionString =
+  "postgresql://postgres:postgres@localhost:5432/messages-test";
 
 export const pool = new Pool({
-  connectionString,
+  connectionString:
+    process.env.NODE_ENV === "test" ? tesConnectionString : connectionString,
 });
 
 export async function pingDatabase(): Promise<void> {

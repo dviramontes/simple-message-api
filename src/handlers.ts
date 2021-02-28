@@ -45,6 +45,7 @@ export const createConvoHandler = async (req: Request, res: Response) => {
   }
 };
 
+// TODO: return messages in convo
 export const getConvoHandler = async (req: Request, res: Response) => {
   if (isEmpty(req.params)) {
     res.status(400).send("missing :id url param");

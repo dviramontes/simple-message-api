@@ -19,7 +19,7 @@ const app: express.Express = express();
   await pingDatabase();
 
   if (process.env.RESET_DB === "true") {
-    // await resetDB();
+    await resetDB();
   }
 
   app.listen(PORT);

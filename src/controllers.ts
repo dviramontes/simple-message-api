@@ -166,7 +166,9 @@ export async function getconvoById(id: number) {
   const client = await pool.connect();
 
   try {
-    const preparedStatement = sql`SELECT id FROM convos where id = $1`;
+    const preparedStatement = sql`
+        SELECT id FROM convos where id = $1
+    `;
     const query = await client.query(preparedStatement, [id]);
     if (query.rowCount > 0) {
       result = query.rows[0];

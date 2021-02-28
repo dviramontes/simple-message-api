@@ -31,13 +31,13 @@ src
 ### Development
 
 - `make dcu`
-- `make start`
+- `make server`
 
 Other dev tasks
 
 #### Testing
 
-- `npm test`
+- `npm test` # make sure server is not also running
 
 #### Formatting
 

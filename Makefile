@@ -1,4 +1,7 @@
-.PHONY: dcu dcd start build dev format lint test
+# dev-targets
+.PHONY: dcu dcd build dev format lint server migrate
+# test targets
+.PHONY: test test-dcd test-dcu
 
 dcu:
 	docker-compose up -d
@@ -7,7 +10,7 @@ dcu:
 dcd:
 	docker-compose down
 
-start:
+server:
 	npm run dev
 
 build:
@@ -24,3 +27,12 @@ lint:
 
 test:
 	npm run test
+
+test-dcu:
+	docker-compose -f ./docker-compose.test.yaml up -d
+
+test-dcd:
+	docker-compose -f ./docker-compose.test.yaml down
+
+migrate:
+
