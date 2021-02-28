@@ -4,6 +4,7 @@ import {
   convoExists,
   createConvo,
   createMessage,
+  getAllUsers,
   getconvoById,
   getMessage,
   getOrCreateUser,
@@ -153,5 +154,17 @@ export const getUserHandler = async (req: Request, res: Response) => {
       return res.status(200).json(result.value);
     }
     return res.status(404).send(`user with id: ${id}, not found`);
+  }
+};
+
+export const getAllUsersHandler = async (req: Request, res: Response) => {
+  const result = await getAllUsers();
+
+  if (result.isErr()) {
+    return res.status(500).send(result.error);
+  }
+
+  if (result.isOk()) {
+    return res.status(200).json(result.value);
   }
 };

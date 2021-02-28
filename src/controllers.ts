@@ -145,6 +145,22 @@ export async function getUserById(id: number) {
   return ok(result);
 }
 
+export async function getAllUsers() {
+  let result = null;
+  const client = await pool.connect();
+
+  try {
+    const query = await client.query(sql`SELECT * FROM users`);
+    result = query.rows;
+  } catch (error) {
+    return err(error.detail);
+  } finally {
+    await client.release();
+  }
+
+  return ok(result);
+}
+
 export async function getconvoById(id: number) {
   let result = {};
   const client = await pool.connect();

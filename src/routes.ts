@@ -8,6 +8,7 @@ import {
   getUserHandler,
   createConvoHandler,
   getConvoHandler,
+  getAllUsersHandler,
 } from "./handlers";
 
 export const healthCheck = express.Router();
@@ -18,11 +19,12 @@ export const api = express.Router();
 
 api.get("/all-messages", getAllMessagesHandler);
 
-api.post("/convo", createConvoHandler);
-api.get("/convo/:id", getConvoHandler);
+api.post("/convos", createConvoHandler);
+api.get("/convos/:id", getConvoHandler);
 
-api.post("/message", createMessageHandler);
-api.get("/message/:id", getMessageHandler);
+api.post("/messages", createMessageHandler);
+api.get("/messages/:id", getMessageHandler);
 
-api.post("/user", createUserHandler);
-api.get("/user/:id", getUserHandler);
+api.post("/users", createUserHandler);
+api.get("/users/:id", getUserHandler);
+api.get("/users", getAllUsersHandler);
