@@ -46,7 +46,7 @@ export async function createMessage(
       +sendById,
       content,
     ]);
-    console.log({ insertResult });
+
     await client.query(sql`COMMIT`);
 
     result = insertResult.rowCount;
@@ -85,7 +85,7 @@ export async function getOrCreateUser(uuid: string) {
   try {
     await client.query(sql`BEGIN`);
 
-    const preparedStatement = sql`INSERT INTO users(uuid) VALUES ($1) RETURNING uuid`;
+    const preparedStatement = sql`INSERT INTO users(uuid) VALUES ($1) RETURNING *`;
     const createTransaction = await client.query(preparedStatement, [uuid]);
     if (createTransaction.rowCount === 1) {
       await client.query(sql`COMMIT`);
@@ -146,14 +146,15 @@ export async function getUserById(id: number) {
 }
 
 export async function getconvoById(id: number) {
-  let result = null;
+  let result = {};
   const client = await pool.connect();
 
   try {
     const preparedStatement = sql`SELECT id FROM convos where id = $1`;
     const query = await client.query(preparedStatement, [id]);
-
-    result = query.rows;
+    if (query.rowCount > 0) {
+      result = query.rows[0];
+    }
   } catch (error) {
     return err(error.detail);
   } finally {

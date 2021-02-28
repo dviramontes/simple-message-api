@@ -34,9 +34,13 @@ Other dev tasks
 
 - `npm test`
 
-#### Linting
+#### Formatting
 
 - `npm run format` uses prettier
+
+#### Linting
+
+- `npm run format` uses eslint
 
 ### Database Change Management
 

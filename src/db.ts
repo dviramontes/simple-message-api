@@ -8,7 +8,7 @@ export const pool = new Pool({
   connectionString,
 });
 
-export async function pingDatabase() {
+export async function pingDatabase(): Promise<void> {
   const client = await pool.connect();
   const {
     rows: [{ now }],
@@ -17,7 +17,7 @@ export async function pingDatabase() {
   client.release();
 }
 
-export async function resetDB() {
+export async function resetDB(): Promise<void> {
   console.log("-- resetting db");
 
   const client = await pool.connect();

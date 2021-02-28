@@ -8,7 +8,6 @@ import {
   getMessage,
   getOrCreateUser,
   getUserById,
-  getUserByUUID,
 } from "./controllers";
 import { isEmpty, uniqueId } from "lodash";
 
@@ -22,7 +21,7 @@ export const createConvoHandler = async (req: Request, res: Response) => {
     return;
   }
 
-  let { userId, recipientId } = req.body;
+  const { userId, recipientId } = req.body;
 
   const getConvoResult = await convoExists(userId, recipientId);
 
@@ -54,7 +53,7 @@ export const getConvoHandler = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   const result = await getconvoById(+id);
-  console.log({ result });
+
   if (result.isErr()) {
     return res.status(500).send(result.error);
   }
@@ -81,7 +80,7 @@ export const createMessageHandler = async (req: Request, res: Response) => {
     return;
   }
 
-  let { convoId, sendById, content } = req.body;
+  const { convoId, sendById, content } = req.body;
 
   const result = await createMessage(convoId, sendById, content);
 
@@ -90,7 +89,7 @@ export const createMessageHandler = async (req: Request, res: Response) => {
   }
 
   if (result.isOk()) {
-    return res.status(200).send("message created");
+    return res.status(200).send("message posted successfully");
   }
 };
 
@@ -100,7 +99,7 @@ export const getMessageHandler = async (req: Request, res: Response) => {
     return;
   }
 
-  let { id } = req.params;
+  const { id } = req.params;
 
   const result = await getMessage(+id);
 
