@@ -10,8 +10,8 @@ dcu:
 dcd:
 	docker-compose down
 
-server:
-	npm run dev
+server: migrate
+	npm start
 
 build:
 	npm run build
@@ -35,4 +35,6 @@ test-dcd:
 	docker-compose -f ./docker-compose.test.yaml down
 
 migrate:
+	npx knex migrate:latest --env development
+
 

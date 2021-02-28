@@ -19,7 +19,7 @@ src
 
 ### Requirements
 
-- [Node >= 12](https://nodejs.org/en/download/)
+- [Node >= 14](https://nodejs.org/en/download/)
 - [Docker](https://docs.docker.com/get-docker/)
 - [NVM](https://github.com/nvm-sh/nvm)
 
@@ -27,11 +27,12 @@ src
 
 - nvm use
 - npm i
+- make migrate
 
 ### Development
 
 - `make dcu`
-- `make server`
+- `make dev`
 
 Other dev tasks
 
