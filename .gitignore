@@ -1,3 +1,4 @@
 node_modules
 dist
 pg-data
+.env

@@ -34,10 +34,12 @@
     "typescript": "^4.2.2"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "knex": "^0.21.18",
     "lodash": "^4.17.21",
     "neverthrow": "^4.1.1",
-    "pg": "^8.5.1"
+    "pg": "^8.5.1",
+    "sql-template-strings": "^2.2.2"
   }
 }

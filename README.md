@@ -49,4 +49,4 @@ Running migrations
 - `npx knex migrate:latest --env <env>` where _env_ can be development, staging or production
 - `npx knex migrate:rollback` rollback latest
 - `npx knex migrate:list` list pending migrations
-- For more commands available from knex checkout [this page](https://knexjs.org/#Migrations)
+- For a list of all commands available from knex checkout [this page](https://knexjs.org/#Migrations)

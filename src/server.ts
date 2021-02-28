@@ -1,7 +1,9 @@
 import express from "express";
 import bodyParser = require("body-parser");
 import { api, healthCheck } from "./routes";
-import { pingDatabase } from "./db";
+import { pingDatabase, resetDB } from "./db";
+
+require("dotenv").config(); // load .env
 
 const PORT = process.env.PORT || 4000;
 
@@ -15,7 +17,11 @@ const PORT = process.env.PORT || 4000;
 
   await pingDatabase();
 
+  if (process.env.RESET_DB === "true") {
+    // await resetDB();
+  }
+
   app.listen(PORT);
 
-  console.log(`server running on ${PORT}`);
+  console.log(`-- server running on ${PORT}`);
 })();

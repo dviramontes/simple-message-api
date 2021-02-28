@@ -1,4 +1,4 @@
-.PHONY: dcu dcd start build dev
+.PHONY: dcu dcd start build dev format
 
 dcu:
 	docker-compose up -d
@@ -15,3 +15,6 @@ build:
 
 dev:
 	npm run dev
+
+format:
+	npm run format
