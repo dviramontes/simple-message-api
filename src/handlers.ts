@@ -9,7 +9,7 @@ import {
   getOrCreateUser,
   getUserById,
 } from "./controllers";
-import { isEmpty, uniqueId } from "lodash";
+import { isEmpty, uniqueId, isNull } from "lodash";
 
 export const pingHandler = (req: Request, res: Response) => {
   return res.send("pong");
@@ -30,14 +30,14 @@ export const createConvoHandler = async (req: Request, res: Response) => {
   }
 
   if (getConvoResult.isOk()) {
-    if (isEmpty(getConvoResult.value)) {
+    if (isNull(getConvoResult.value)) {
       const createConvoResult = await createConvo(userId, recipientId);
 
       if (createConvoResult.isOk()) {
         return res.status(200).json(createConvoResult.value);
       }
       if (createConvoResult.isErr()) {
-        return res.status(500).json(createConvoResult.error);
+        return res.status(500).send(createConvoResult.error);
       }
     }
     return res.status(200).json(getConvoResult.value);
@@ -149,6 +149,9 @@ export const getUserHandler = async (req: Request, res: Response) => {
   }
 
   if (result.isOk()) {
-    return res.status(200).json(result.value);
+    if (result.value) {
+      return res.status(200).json(result.value);
+    }
+    return res.status(404).send(`user with id: ${id}, not found`);
   }
 };

@@ -7,14 +7,12 @@ export async function allMessagesController() {
   let result = null;
   const client = await pool.connect();
   try {
-    // TODO: add 100 msg limit
-    // TODO: add < 30 day limit
     const queryResults = await client.query(
       sql`
-        SELECT u.uuid, m.content from user_messages
-        JOIN users as u on u.id = user_id
-        JOIN messages as m on m.id = message_id;
-    `
+          SELECT *
+          FROM messages
+          WHERE messages.created_at > (now() - '30 days'::INTERVAL)
+          LIMIT 100`
     );
     result = queryResults.rows;
   } catch (error) {
@@ -176,8 +174,9 @@ export async function convoExists(userId: number, recipientId: number) {
         AND convos.id = user_convos.convo_id
         AND user_convos.user_id = ${+recipientId}
     `);
-
-    result = query.rows[0];
+    if (query.rowCount > 0) {
+      result = query.rows[0];
+    }
   } catch (error) {
     return err(error.detail);
   } finally {
@@ -211,6 +210,7 @@ export async function createConvo(userId: number, recipientId: number) {
 
     result = { id };
   } catch (error) {
+    await client.query(sql`ROLLBACK`);
     return err(error.detail);
   } finally {
     await client.release();
