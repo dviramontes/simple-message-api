@@ -6,7 +6,12 @@
 
 ```
 {root}
-
+src
+├── controllers            # defines methods for interacting with our database
+├── db.ts                  # database connection handler
+├── handlers.ts            # normalize API request && responses
+├── routes.ts              # defines the routes of our API service
+├── server.ts              # main entrypoint for our API server, sets up Express.js server + middleware
 ...
 ```
 

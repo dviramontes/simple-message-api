@@ -1,4 +1,4 @@
-.PHONY: dcu dcd start build dev format lint
+.PHONY: dcu dcd start build dev format lint test
 
 dcu:
 	docker-compose up -d
@@ -21,3 +21,6 @@ format:
 
 lint:
 	npm run lint
+
+test:
+	npm run test

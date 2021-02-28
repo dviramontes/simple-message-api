@@ -6,10 +6,10 @@ import { pingDatabase, resetDB } from "./db";
 // eslint-disable-next-line
 require("dotenv").config(); // load .env
 
-const PORT = process.env.PORT || 4000;
+const app: express.Express = express();
 
 (async () => {
-  const app = express();
+  const PORT = process.env.PORT || 4000;
 
   // middleware
   app.use(bodyParser.json());
@@ -26,3 +26,5 @@ const PORT = process.env.PORT || 4000;
 
   console.log(`-- server running on ${PORT}`);
 })();
+
+export default app;
