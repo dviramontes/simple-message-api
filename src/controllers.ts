@@ -9,8 +9,8 @@ export async function allMessagesController() {
     const queryResults = await client.query(
       sql`
           SELECT messages.*,
-           (SELECT user_id FROM user_convos 
-            WHERE convo_id = messages.convo_id AND user_id <> messages.send_by_id) AS sent_to_id
+           (SELECT user_id FROM user_chats 
+            WHERE chat_id = messages.chat_id AND user_id <> messages.send_by_id) AS sent_to_id
           FROM messages
           WHERE messages.created_at > (now() - '30 days'::INTERVAL)
           LIMIT 100;
@@ -27,7 +27,7 @@ export async function allMessagesController() {
 }
 
 export async function createMessage(
-  convoId: number,
+  chatId: number,
   sendById: number,
   content: string
 ) {
@@ -38,11 +38,11 @@ export async function createMessage(
     await client.query(sql`BEGIN`);
 
     const preparedStatement = sql`
-      INSERT INTO messages(convo_id, send_by_id, content)
+      INSERT INTO messages(chat_id, send_by_id, content)
       VALUES($1, $2, $3)
     `;
     const insertResult = await client.query(preparedStatement, [
-      +convoId,
+      +chatId,
       +sendById,
       content,
     ]);
@@ -161,13 +161,13 @@ export async function getAllUsers() {
   return ok(result);
 }
 
-export async function getconvoById(id: number) {
+export async function getchatById(id: number) {
   let result = {};
   const client = await pool.connect();
 
   try {
     const preparedStatement = sql`
-        SELECT id FROM convos where id = $1
+        SELECT id FROM chats where id = $1
     `;
     const query = await client.query(preparedStatement, [id]);
     if (query.rowCount > 0) {
@@ -182,17 +182,17 @@ export async function getconvoById(id: number) {
   return ok(result);
 }
 
-export async function convoExists(userId: number, recipientId: number) {
+export async function chatExists(userId: number, recipientId: number) {
   let result = null;
   const client = await pool.connect();
   try {
     const query = await client.query(sql`
-      SELECT convos.* FROM convos, 
-        (SELECT * FROM user_convos WHERE user_id = ${+userId}) AS uc, 
-        user_convos
-      WHERE user_convos.convo_id = uc.convo_id
-        AND convos.id = user_convos.convo_id
-        AND user_convos.user_id = ${+recipientId}
+      SELECT chats.* FROM chats, 
+        (SELECT * FROM user_chats WHERE user_id = ${+userId}) AS uc, 
+        user_chats
+      WHERE user_chats.chat_id = uc.chat_id
+        AND chats.id = user_chats.chat_id
+        AND user_chats.user_id = ${+recipientId}
     `);
     if (query.rowCount > 0) {
       result = query.rows[0];
@@ -206,23 +206,23 @@ export async function convoExists(userId: number, recipientId: number) {
   return ok(result);
 }
 
-export async function createConvo(userId: number, recipientId: number) {
+export async function createChat(userId: number, recipientId: number) {
   let result = null;
   const client = await pool.connect();
   try {
     await client.query(sql`BEGIN`);
-    const convoTx = sql`INSERT INTO convos DEFAULT VALUES RETURNING id`;
+    const chatTx = sql`INSERT INTO chats DEFAULT VALUES RETURNING id`;
     const {
       rows: [{ id }],
-    } = await client.query(convoTx);
+    } = await client.query(chatTx);
 
     await client.query(sql`
-      INSERT INTO user_convos(user_id, convo_id)
+      INSERT INTO user_chats(user_id, chat_id)
       VALUES(${userId}, ${id})
     `);
 
     await client.query(sql`
-      INSERT INTO user_convos(user_id, convo_id)
+      INSERT INTO user_chats(user_id, chat_id)
       VALUES(${recipientId}, ${id})
     `);
 

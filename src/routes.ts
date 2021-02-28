@@ -6,8 +6,8 @@ import {
   getMessageHandler,
   createUserHandler,
   getUserHandler,
-  createConvoHandler,
-  getConvoHandler,
+  createChatHandler,
+  getChatHandler,
   getAllUsersHandler,
 } from "./handlers";
 
@@ -19,8 +19,8 @@ export const api = express.Router();
 
 api.get("/all-messages", getAllMessagesHandler);
 
-api.post("/convos", createConvoHandler);
-api.get("/convos/:id", getConvoHandler);
+api.post("/chats", createChatHandler);
+api.get("/chats/:id", getChatHandler);
 
 api.post("/messages", createMessageHandler);
 api.get("/messages/:id", getMessageHandler);

@@ -27,11 +27,11 @@ export async function resetDB(): Promise<void> {
 
   await client.query(sql`DROP TABLE IF EXISTS users`);
   await client.query(sql`DROP TABLE IF EXISTS messages`);
-  await client.query(sql`DROP TABLE IF EXISTS convos`);
-  await client.query(sql`DROP TABLE IF EXISTS user_convos`);
+  await client.query(sql`DROP TABLE IF EXISTS chats`);
+  await client.query(sql`DROP TABLE IF EXISTS user_chats`);
 
   await client.query(sql`
-    CREATE TABLE convos(
+    CREATE TABLE chats(
         id SERIAL PRIMARY KEY
     );
   `);
@@ -48,16 +48,16 @@ export async function resetDB(): Promise<void> {
         id SERIAL PRIMARY KEY,
         content TEXT NOT NULL,
         send_by_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        convo_id INTEGER NOT NULL REFERENCES convos(id) ON DELETE CASCADE,
+        chat_id INTEGER NOT NULL REFERENCES chats(id) ON DELETE CASCADE,
         created_at TIMESTAMP NOT NULL DEFAULT now(),
         deleted_at TIMESTAMP NOT NULL DEFAULT now()
       );
   `);
 
   await client.query(sql`
-    CREATE TABLE user_convos(
+    CREATE TABLE user_chats(
         user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        convo_id INTEGER NOT NULL REFERENCES convos(id) ON DELETE CASCADE
+        chat_id INTEGER NOT NULL REFERENCES chats(id) ON DELETE CASCADE
     );
   `);
 

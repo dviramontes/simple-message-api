@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import {
   allMessagesController,
-  convoExists,
-  createConvo,
+  chatExists,
+  createChat,
   createMessage,
   getAllUsers,
-  getconvoById,
+  getchatById,
   getMessage,
   getOrCreateUser,
   getUserById,
@@ -16,7 +16,7 @@ export const pingHandler = (req: Request, res: Response) => {
   return res.send("pong");
 };
 
-export const createConvoHandler = async (req: Request, res: Response) => {
+export const createChatHandler = async (req: Request, res: Response) => {
   if (isEmpty(req.body)) {
     res.status(400).send("missing request body");
     return;
@@ -24,29 +24,29 @@ export const createConvoHandler = async (req: Request, res: Response) => {
 
   const { userId, recipientId } = req.body;
 
-  const getConvoResult = await convoExists(userId, recipientId);
+  const getChatResult = await chatExists(userId, recipientId);
 
-  if (getConvoResult.isErr()) {
-    return res.status(500).send(getConvoResult.error);
+  if (getChatResult.isErr()) {
+    return res.status(500).send(getChatResult.error);
   }
 
-  if (getConvoResult.isOk()) {
-    if (isNull(getConvoResult.value)) {
-      const createConvoResult = await createConvo(userId, recipientId);
+  if (getChatResult.isOk()) {
+    if (isNull(getChatResult.value)) {
+      const createChatResult = await createChat(userId, recipientId);
 
-      if (createConvoResult.isOk()) {
-        return res.status(200).json(createConvoResult.value);
+      if (createChatResult.isOk()) {
+        return res.status(200).json(createChatResult.value);
       }
-      if (createConvoResult.isErr()) {
-        return res.status(500).send(createConvoResult.error);
+      if (createChatResult.isErr()) {
+        return res.status(500).send(createChatResult.error);
       }
     }
-    return res.status(200).json(getConvoResult.value);
+    return res.status(200).json(getChatResult.value);
   }
 };
 
-// TODO: return messages in convo
-export const getConvoHandler = async (req: Request, res: Response) => {
+// TODO: return messages in chat
+export const getChatHandler = async (req: Request, res: Response) => {
   if (isEmpty(req.params)) {
     res.status(400).send("missing :id url param");
     return;
@@ -54,7 +54,7 @@ export const getConvoHandler = async (req: Request, res: Response) => {
 
   const { id } = req.params;
 
-  const result = await getconvoById(+id);
+  const result = await getchatById(+id);
 
   if (result.isErr()) {
     return res.status(500).send(result.error);
@@ -82,9 +82,9 @@ export const createMessageHandler = async (req: Request, res: Response) => {
     return;
   }
 
-  const { convoId, sendById, content } = req.body;
+  const { chatId, sendById, content } = req.body;
 
-  const result = await createMessage(convoId, sendById, content);
+  const result = await createMessage(chatId, sendById, content);
 
   if (result.isErr()) {
     return res.status(500).send(result.error);
