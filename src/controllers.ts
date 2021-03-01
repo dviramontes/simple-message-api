@@ -39,7 +39,7 @@ export async function createMessage(
 
     const preparedStatement = sql`
       INSERT INTO messages(chat_id, send_by_id, content)
-      VALUES($1, $2, $3)
+      VALUES($1, $2, $3) RETURNING id
     `;
     const insertResult = await client.query(preparedStatement, [
       +chatId,
@@ -49,7 +49,9 @@ export async function createMessage(
 
     await client.query(sql`COMMIT`);
 
-    result = insertResult.rowCount;
+    if (insertResult.rowCount > 0) {
+      result = insertResult.rows[0];
+    }
   } catch (error) {
     await client.query(sql`ROLLBACK`);
     return err(error.detail);

@@ -90,7 +90,13 @@ export const createMessageHandler = async (req: Request, res: Response) => {
   }
 
   if (result.isOk()) {
-    return res.status(200).send("message posted successfully");
+    if (isNull(result.value)) {
+      return res.status(500).send("message posted failed");
+    }
+    return res.status(200).json({
+      id: result.value.id,
+      message: "message posted successfully",
+    });
   }
 };
 

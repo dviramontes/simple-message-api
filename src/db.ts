@@ -83,5 +83,4 @@ export async function resetDB(): Promise<void> {
   } finally {
     await client.release();
   }
-
 }
