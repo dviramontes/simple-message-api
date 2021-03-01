@@ -2,7 +2,7 @@
 
 The following API usage examples assume [httpie](https://httpie.io/) but `curl` or `wget` works just as well
 
-### Healthcheck
+### HealthCheck
 
 ```shell
 http GET 'http://localhost:4000/ping'

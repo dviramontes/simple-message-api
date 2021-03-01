@@ -5,7 +5,7 @@ import {
   createChat,
   createMessage,
   getAllUsers,
-  getchatById,
+  getChatMessagesByChatId,
   getMessage,
   getOrCreateUser,
   getUserById,
@@ -53,7 +53,7 @@ export const getChatHandler = async (req: Request, res: Response) => {
 
   const { id } = req.params;
 
-  const result = await getchatById(+id);
+  const result = await getChatMessagesByChatId(+id);
 
   if (result.isErr()) {
     return res.status(500).send(result.error);

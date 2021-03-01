@@ -97,7 +97,7 @@ describe("API", () => {
     });
 
     describe("all messages endpoint", () => {
-      beforeEach(async () => {
+      beforeAll(async () => {
         const createUserRes = await request
           .post("/api/users")
           .send({ uuid: "user3" })
@@ -139,6 +139,22 @@ describe("API", () => {
 
         expect(getRes.status).toEqual(200);
         expect(getRes.body.length).toEqual(3);
+      });
+
+      describe("Chats", () => {
+        it("should only be able to retrieve the messages in a specific chat", async () => {
+          const getRes1 = await request.get(`/api/chats/${firstChatId}`);
+
+          // there is only one message between user1 and user2
+          expect(getRes1.status).toEqual(200);
+          expect(getRes1.body.length).toEqual(1);
+
+          const getRes2 = await request.get(`/api/chats/${secondChatId}`);
+
+          // and there are two messages between user1 and user3
+          expect(getRes2.status).toEqual(200);
+          expect(getRes2.body.length).toEqual(2);
+        });
       });
     });
   });

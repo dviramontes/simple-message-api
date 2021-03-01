@@ -163,8 +163,8 @@ export async function getAllUsers() {
   return ok(result);
 }
 
-export async function getchatById(id: number) {
-  let result = null;
+export async function getChatMessagesByChatId(id: number) {
+  let result = [];
   const client = await pool.connect();
 
   try {
@@ -173,7 +173,7 @@ export async function getchatById(id: number) {
     `;
     const query = await client.query(preparedStatement, [id]);
     if (query.rowCount > 0) {
-      result = query.rows[0];
+      result = query.rows;
     }
   } catch (error) {
     return err(error.detail);
