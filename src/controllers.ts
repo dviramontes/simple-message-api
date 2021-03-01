@@ -169,7 +169,10 @@ export async function getChatMessagesByChatId(id: number) {
 
   try {
     const preparedStatement = sql`
-        SELECT * FROM messages WHERE chat_id = ${id}
+        SELECT * FROM messages 
+        WHERE chat_id = ${id} AND 
+              created_at > (now() - '30 days'::INTERVAL)
+              LIMIT 100
     `;
     const query = await client.query(preparedStatement, [id]);
     if (query.rowCount > 0) {
