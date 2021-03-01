@@ -243,3 +243,31 @@ export async function createChat(userId: number, recipientId: number) {
 
   return ok(result);
 }
+
+export async function updateMessageTimestamp(
+  messageId: number,
+  timeAgo: string
+) {
+  let result = null;
+  const client = await pool.connect();
+  try {
+    await client.query(sql`BEGIN`);
+    const preparedStatement = sql`
+        UPDATE messages SET created_at = (now() - ${timeAgo}::INTERVAL) WHERE id = ${messageId}
+    `;
+    const msgTx = await client.query(preparedStatement);
+
+    if (msgTx.rowCount > 0) {
+      result = msgTx.rowCount;
+    }
+
+    await client.query(sql`COMMIT`);
+  } catch (error) {
+    await client.query(sql`ROLLBACK`);
+    return err(error.detail);
+  } finally {
+    await client.release();
+  }
+
+  return ok(result);
+}

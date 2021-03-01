@@ -1,6 +1,7 @@
 import supertest from "supertest";
 import app from "./server";
 import { resetDB } from "./db";
+import { updateMessageTimestamp } from "./controllers";
 
 const request = supertest(app);
 
@@ -10,7 +11,8 @@ describe("API", () => {
   let thirdUserId: number;
   let firstChatId: number;
   let secondChatId: number;
-  let messageId: number;
+  let firstMessageId: number;
+  let secondMessageId: number;
 
   it("should reply to /ping health-check", async () => {
     const res = await request.get("/ping");
@@ -82,17 +84,17 @@ describe("API", () => {
         })
         .set("Accept", "application/json");
 
-      messageId = createRes.body.id;
+      firstMessageId = createRes.body.id;
 
       expect(createRes.status).toEqual(200);
       expect(createRes.body.message).toMatch(/message posted successfully/);
     });
 
     it("should be able to retrieve a single message by id", async () => {
-      const getRes = await request.get(`/api/messages/${messageId}`);
+      const getRes = await request.get(`/api/messages/${firstMessageId}`);
 
       expect(getRes.status).toEqual(200);
-      expect(getRes.body.id).toEqual(messageId);
+      expect(getRes.body.id).toEqual(firstMessageId);
       expect(getRes.body.content).toMatch(/hola!/);
     });
 
@@ -124,7 +126,7 @@ describe("API", () => {
           })
           .set("Accept", "application/json");
 
-        await request // send another message on chat 2: user1 <> user3
+        const msgRes = await request // send another message on chat 2: user1 <> user3
           .post("/api/messages")
           .send({
             content: "todo bien, ¿Y tu?",
@@ -132,6 +134,8 @@ describe("API", () => {
             chatId: secondChatId,
           })
           .set("Accept", "application/json");
+
+        secondMessageId = msgRes.body.id;
       });
 
       it("should be able to retrieve all messages", async () => {
@@ -157,9 +161,59 @@ describe("API", () => {
         });
       });
     });
+
+    describe("Chat Message limit", () => {
+      beforeAll(async () => {
+        await insertMessages(101, firstUserid, firstChatId); // for a total of 102 messages
+      });
+
+      it("should return the last 100 messages", async () => {
+        const getRes = await request.get(`/api/chats/${firstChatId}`);
+
+        expect(getRes.status).toEqual(200);
+        expect(getRes.body.length).toEqual(100);
+      });
+
+      beforeAll(async () => {
+        await updateMessageTimestamp(secondMessageId, "1 years");
+      });
+
+      it("should only return messages that are less than 30 days old", async () => {
+        const getRes = await request.get(`/api/chats/${secondChatId}`);
+
+        expect(getRes.status).toEqual(200);
+        expect(getRes.body.length).toEqual(1);
+      });
+    });
   });
 });
 
 afterAll(async () => {
   await resetDB();
 });
+
+async function insertMessages(count: number, sendById: number, chatId: number) {
+  const arr = new Array(count).fill(0);
+  return Promise.all(
+    arr.map(
+      (_, i) =>
+        new Promise((resolve, reject) => {
+          (async () => {
+            const res = await request
+              .post("/api/messages")
+              .send({
+                content: `${i}`,
+                sendById,
+                chatId,
+              })
+              .set("Accept", "application/json");
+            if (res.status === 200) {
+              return resolve(res);
+            }
+
+            return reject(res);
+          })();
+        })
+    )
+  );
+}
