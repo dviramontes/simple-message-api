@@ -16,6 +16,7 @@ src
 ```
 
 - [For API service endpoints refer to this doc](./API.md)
+- [Project's KANBAN board](https://github.com/dviramontes/simple-message-api/projects/1)
 
 ### Requirements
 
@@ -36,17 +37,22 @@ src
 
 Other dev tasks
 
-#### Testing
+### Testing
 
-- `npm test` # make sure server is not also running
+E2E API test setup
+
+- `make test-dcu` # spins up docker-compose test database
+- `make test-migrate` # run database migrations
+- `make test` # run tests, make sure server is not also running
+- `make test-dcd` # spin down docker-compose test database
 
 #### Formatting
 
-- `npm run format` uses prettier
+- `make format` uses prettier
 
 #### Linting
 
-- `npm run format` uses eslint
+- `make lint` uses eslint
 
 ### Database Change Management
 

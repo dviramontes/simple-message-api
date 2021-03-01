@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser = require("body-parser");
 import { api, healthCheck } from "./routes";
-import { initDB, pingDatabase, resetDB } from "./db";
+import { initDB, pingDatabase } from "./db";
 
 // eslint-disable-next-line
 require("dotenv").config(); // load .env
