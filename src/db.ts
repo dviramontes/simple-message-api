@@ -20,7 +20,7 @@ export async function pingDatabase(): Promise<void> {
   client.release();
 }
 
-export async function resetDB(): Promise<void> {
+export async function initDB(): Promise<void> {
   console.log("-- resetting db");
 
   const client = await pool.connect();
@@ -66,4 +66,22 @@ export async function resetDB(): Promise<void> {
   );
 
   await client.release();
+}
+
+export async function resetDB(): Promise<void> {
+  console.log("-- truncating tables");
+
+  const client = await pool.connect();
+
+  try {
+    await client.query(sql`TRUNCATE TABLE messages RESTART IDENTITY CASCADE`);
+    await client.query(sql`TRUNCATE TABLE user_chats RESTART IDENTITY CASCADE`);
+    await client.query(sql`TRUNCATE TABLE users RESTART IDENTITY CASCADE`);
+    await client.query(sql`TRUNCATE TABLE chats RESTART IDENTITY CASCADE`);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    await client.release();
+  }
+
 }

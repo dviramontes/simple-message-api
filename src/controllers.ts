@@ -162,12 +162,12 @@ export async function getAllUsers() {
 }
 
 export async function getchatById(id: number) {
-  let result = {};
+  let result = null;
   const client = await pool.connect();
 
   try {
     const preparedStatement = sql`
-        SELECT id FROM chats where id = $1
+        SELECT * FROM messages WHERE chat_id = ${id}
     `;
     const query = await client.query(preparedStatement, [id]);
     if (query.rowCount > 0) {

@@ -45,7 +45,6 @@ export const createChatHandler = async (req: Request, res: Response) => {
   }
 };
 
-// TODO: return messages in chat
 export const getChatHandler = async (req: Request, res: Response) => {
   if (isEmpty(req.params)) {
     res.status(400).send("missing :id url param");

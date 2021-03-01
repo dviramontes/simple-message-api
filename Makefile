@@ -1,7 +1,7 @@
 # dev-targets
 .PHONY: dcu dcd build dev format lint server migrate
 # test targets
-.PHONY: test test-dcd test-dcu
+.PHONY: test test-dcd test-dcu test-migrate
 
 dcu:
 	docker-compose up -d
@@ -37,4 +37,6 @@ test-dcd:
 migrate:
 	npx knex migrate:latest --env development
 
+test-migrate:
+	npx knex migrate:latest --env test
 

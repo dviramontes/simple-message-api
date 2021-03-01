@@ -1,5 +1,6 @@
 import supertest from "supertest";
 import app from "./server";
+import { resetDB } from "./db";
 
 const request = supertest(app);
 
@@ -24,4 +25,8 @@ describe("API", () => {
     expect(getRes.status).toEqual(200);
     expect(getRes.body.uuid).toEqual("testUser123");
   });
+});
+
+afterAll(async () => {
+  await resetDB();
 });
